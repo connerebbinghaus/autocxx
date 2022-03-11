@@ -314,7 +314,8 @@ impl<'a> ParseBindgen<'a> {
             .map(|api| api.name().to_cpp_name())
             .collect();
         for generate_directive in self.config.must_generate_list() {
-            if !api_names.contains(&generate_directive) {
+            let re = regex::Regex::new(&generate_directive).unwrap();
+            if !api_names.iter().any(|api_name| re.is_match(api_name)) {
                 return Err(ConvertError::DidNotGenerateAnything(generate_directive));
             }
         }
