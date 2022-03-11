@@ -363,7 +363,8 @@ impl IncludeCppConfig {
         match self.bindgen_allowlist() {
             None => true,
             Some(mut items) => {
-                items.any(|item| item == cpp_name)
+
+                items.any(|item| {let re = regex::Regex::new(&item).unwrap(); re.is_match(cpp_name)})
                     || self.active_utilities().iter().any(|item| *item == cpp_name)
                     || self.is_subclass_holder(cpp_name)
                     || self.is_subclass_cpp(cpp_name)
