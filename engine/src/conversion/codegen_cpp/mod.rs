@@ -466,8 +466,9 @@ impl<'a> CppCodeGenerator<'a> {
             }
             CppFunctionBody::Destructor(ns, id) => {
                 let ty_id = QualifiedName::new(ns, id.clone());
-                let ty_id = final_ident_using_original_name_map(&ty_id, &self.original_name_map);
-                (format!("{}->~{}()", arg_list, ty_id), "".to_string(), false)
+                let ty_id_last = final_ident_using_original_name_map(&ty_id, &self.original_name_map);
+                let qual_id = namespaced_name_using_original_name_map(&ty_id, &self.original_name_map);
+                (format!("{}->{}::~{}()", arg_list, qual_id, ty_id_last), "".to_string(), false)
             }
             CppFunctionBody::FunctionCall(ns, id) => match receiver {
                 Some(receiver) => (
